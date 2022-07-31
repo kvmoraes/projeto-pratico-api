@@ -5,9 +5,6 @@ const validator = createValidator({});
 const { tshirtQuerySchema } = require('../middleware/validator');
 const controller = require('../controllers/productController');
 
-
-
-router.get('/tshirt', validator.query(tshirtQuerySchema), controller.getProductBySize)
-
+router.get('/tshirt', validator.query(tshirtQuerySchema), controller.getProduct)
 
 module.exports = router

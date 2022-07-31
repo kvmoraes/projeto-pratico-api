@@ -11,8 +11,9 @@ const userDefaultBodySchema = Joi.object({
 });
 
 const tshirtQuerySchema = Joi.object({
-    size: Joi.string().required(),
-});
+    id: Joi.string().optional(),
+    size: Joi.string().optional()
+}).min(1);
 
 const userParamsSchema = Joi.object({
     id: Joi.string().required()

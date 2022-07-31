@@ -1,28 +1,45 @@
 const { dataTshirt } = require('../dbContent/products/tshirts');
 
 const getProduct = async (req, res) => {
-    const { id, size } = req.query;
+    try {
+        const { id, size } = req.query;
 
-    let selectTShirtById = [];
-    let selectTShirtBySize = [];
-    
-    
-    if (id) {
-        selectTShirtById = dataTshirt.filter(tshirt => tshirt.id === Number(id));
-    }
-    if (size) {
-        selectTShirtBySize = dataTshirt.reduce((acc, product) => {
-            const checkedSize = product.size === size;
-            if (checkedSize) acc = [...acc, product]
-            return acc;
-        }, []);
-    }
+        let selectTShirtById = [];
+        let selectTShirtBySize = [];
+        
+        if (id) {
+            if (!isTShirtId(id)) throw new Error('ID do not exist.')
+            selectTShirtById = dataTshirt.filter(tshirt => tshirt.id === Number(id));
+        }
+        if (size) {
+            if (!isTShirtSize(size)) throw new Error('This size does not exist.')
+            selectTShirtBySize = dataTshirt.reduce((acc, product) => {
+                const checkedSize = product.size === size;
+                if (checkedSize) acc = [...acc, product]
+                return acc;
+            }, []);
+        }
 
-    const selectedTShirts = [...selectTShirtById, ...selectTShirtBySize];
-    res.status(200).send(selectedTShirts);
+        const selectedTShirts = [...selectTShirtById, ...selectTShirtBySize];
+        res.status(200).send(selectedTShirts);
+    } catch (error) {
+        console.log(error);
+
+        res.status(404).send(error.message);
+    }
 }
     
+// PRIVATE FUNCTIONS
+const isTShirtId = (id) => { 
+    const tshirtExists = dataTshirt.filter(product => product.id === Number(id));
+    return tshirtExists > 0;
+}
+
+const isTShirtSize = (size) => {
+    const tshirtExists = dataTshirt.filter(product => product.size === size);
+    return tshirtExists > 0;
+}
 
 module.exports = {
-    getProduct
+    getProduct,
 }

@@ -14,8 +14,13 @@ const tshirtQuerySchema = Joi.object({
     size: Joi.string().required(),
 });
 
+const userParamsSchema = Joi.object({
+    id: Joi.string().required()
+})
+
 module.exports = {
     userQuerySchema,
     userDefaultBodySchema,
-    tshirtQuerySchema
+    tshirtQuerySchema,
+    userParamsSchema 
 }

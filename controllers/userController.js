@@ -1,4 +1,5 @@
 const { dataUser } = require('../dbContent/users/user');
+const defaultError = new Error ('ID do not exist.');
 
 const getUser = async (req, res) => {
     const userId = req.query.id;
@@ -27,7 +28,7 @@ const updateUser = async (req, res) => {
         const id = req.body.id;
         const isUser = checkIfUserExists(id);
 
-        if (!isUser) throw new Error('Resource not found.')
+        if (!isUser) throw defaultError;
         
         const user = updateUserInfo(req.body);
 
@@ -47,7 +48,7 @@ const deleteUser = async (req, res) => {
         const id = req.params.id;
         const isUser = checkIfUserExists(id);
 
-        if (!isUser) throw new Error('Resource not found.')
+        if (!isUser) throw defaultError;
 
         const newUsers = dataUser.filter(item => item.id !== Number(id));
         res.status(200).send(newUsers)

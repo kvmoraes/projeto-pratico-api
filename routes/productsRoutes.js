@@ -8,5 +8,6 @@ const controller = require('../controllers/productController');
 router.get('/tshirt', validator.query(tshirtQuerySchema), controller.getProduct)
 router.post('/tshirt', validator.body(tshirtBodySchema), controller.createProduct)
 router.put('/tshirt', validator.body(tshirtBodySchema), controller.updateProduct)
+router.delete('/tshirt/:id', validator.params(tshirtQuerySchema), controller.deleteProduct)
 
 module.exports = router

@@ -1,5 +1,7 @@
 const { dataTshirt } = require('../dbContent/products/tshirts');
 
+const defaultError = new Error ('ID do not exist.');
+
 const getProduct = async (req, res) => {
     try {
         const { id, size } = req.query;
@@ -8,7 +10,7 @@ const getProduct = async (req, res) => {
         let selectTShirtBySize = [];
         
         if (id) {
-            if (!isTShirtId(id)) throw new Error('ID do not exist.')
+            if (!isTShirtId(id)) throw new defaultError;
             selectTShirtById = dataTshirt.filter(tshirt => tshirt.id === Number(id));
         }
         if (size) {
@@ -35,16 +37,25 @@ const getProduct = async (req, res) => {
 }
 
 const createProduct = async (req, res) => {
-    const newDataTShirts = [...dataTshirt, req.body];
+    try {
+        const { id } = req.body;
+        const newDataTShirts = [...dataTshirt, req.body];
 
-    res.status(200).send(newDataTShirts);
+        if (isTShirtId(id)) throw new Error ('ID already exists.')
+
+        res.status(200).send(newDataTShirts);
+    } catch (error) {
+        console.log(error);
+
+        res.status(404).send(error.message);
+    }
 }
     
 const updateProduct = async (req, res) => {
     try {
         const { id } = req.body;
 
-        if (!isTShirtId(id)) throw new Error ('ID do not exist.');
+        if (!isTShirtId(id)) throw defaultError;
 
         const product = updateProductInfo(req.body);
         const oldProducts = dataTshirt.filter(item => item.id !== id);
@@ -57,6 +68,23 @@ const updateProduct = async (req, res) => {
         res.status(404).send(error.message);
     }
 }
+
+const deleteProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!isTShirtId(id)) throw defaultError;
+
+        const newProducts = dataTshirt.filter(item => item.id !== Number(id));
+        res.status(200).send(newProducts);
+    } catch (error) {
+        console.log(error);
+
+        res.status(404).send(error.message);
+    }
+}
+
+
 
 // PRIVATE FUNCTIONS
 const isTShirtId = (id) => { 
@@ -84,4 +112,5 @@ module.exports = {
     getProduct,
     createProduct,
     updateProduct,
+    deleteProduct
 }

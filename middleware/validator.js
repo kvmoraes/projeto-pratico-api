@@ -11,10 +11,6 @@ const userDefaultBodySchema = Joi.object({
     birthDate: Joi.string().required()
 });
 
-const userParamsSchema = Joi.object({
-    id: Joi.string().required()
-})
-
 //PRODUCTS SCHEMA
 const tshirtQuerySchema = Joi.object({
     id: Joi.string().optional(),
@@ -30,7 +26,6 @@ const tshirtBodySchema = Joi.object({
 module.exports = {
     userQuerySchema,
     userDefaultBodySchema,
-    userParamsSchema,
     tshirtQuerySchema,
     tshirtBodySchema
 }

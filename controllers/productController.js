@@ -40,20 +40,48 @@ const createProduct = async (req, res) => {
     res.status(200).send(newDataTShirts);
 }
     
+const updateProduct = async (req, res) => {
+    try {
+        const { id } = req.body;
 
+        if (!isTShirtId(id)) throw new Error ('ID do not exist.');
+
+        const product = updateProductInfo(req.body);
+        const oldProducts = dataTshirt.filter(item => item.id !== id);
+        const newProducts = [...oldProducts, product];
+
+        res.status(200).send(newProducts);
+    } catch (error) {
+        console.log(error);
+
+        res.status(404).send(error.message);
+    }
+}
 
 // PRIVATE FUNCTIONS
 const isTShirtId = (id) => { 
     const tshirtExists = dataTshirt.filter(product => product.id === Number(id));
-    return tshirtExists > 0;
+    return tshirtExists.length > 0;
 }
 
 const isTShirtSize = (size) => {
     const tshirtExists = dataTshirt.filter(product => product.size === size);
-    return tshirtExists > 0;
+    return tshirtExists.length > 0;
 }
+
+const updateProductInfo = ({ id, size, description }) => {
+    return dataTshirt.reduce((acc, currentProduct) => {
+        const checkedProduct = currentProduct.id === id;
+        if (checkedProduct) {
+            acc = { ...acc, ...{ id, size, description }}
+        }
+        return acc;
+    }, {});
+};
+
 
 module.exports = {
     getProduct,
-    createProduct
+    createProduct,
+    updateProduct,
 }

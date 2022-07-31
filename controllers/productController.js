@@ -21,14 +21,27 @@ const getProduct = async (req, res) => {
         }
 
         const selectedTShirts = [...selectTShirtById, ...selectTShirtBySize];
-        res.status(200).send(selectedTShirts);
+
+        res.status(200).send( 
+            (!id && !size) ? 
+            dataTshirt :
+            selectedTShirts
+        );
     } catch (error) {
         console.log(error);
 
         res.status(404).send(error.message);
     }
 }
+
+const createProduct = async (req, res) => {
+    const newDataTShirts = [...dataTshirt, req.body];
+
+    res.status(200).send(newDataTShirts);
+}
     
+
+
 // PRIVATE FUNCTIONS
 const isTShirtId = (id) => { 
     const tshirtExists = dataTshirt.filter(product => product.id === Number(id));
@@ -42,4 +55,5 @@ const isTShirtSize = (size) => {
 
 module.exports = {
     getProduct,
+    createProduct
 }
